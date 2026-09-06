@@ -1,0 +1,171 @@
+FR8LABS GLOBAL FREIGHT FORWARDING
+STANDARD OPERATING POLICY & CUSTOMER GUIDELINES
+Document Ref: F8-POL-2025-001 | Version 3.2 | Effective: 1 January 2025
+Classification: Internal / Customer-Facing Summary
+
+================================================================================
+1. PURPOSE AND SCOPE
+================================================================================
+
+This policy defines standard terms, transit commitments, documentation
+requirements, and claims procedures for ocean, air, and multimodal shipments
+handled by Fr8Labs and its appointed agents. It applies to all quotations (QT),
+booking confirmations, and house bills of lading (HBL) issued under Fr8Labs
+reference numbers unless superseded by a signed customer master service agreement.
+
+================================================================================
+2. QUOTATION VALIDITY AND RATE APPLICATION
+================================================================================
+
+2.1  All spot quotations remain valid for fourteen (14) calendar days from the
+     date of issue unless otherwise stated on the QT.
+
+2.2  Quoted rates assume general cargo, factory stuffing, and standard free time
+     at origin and destination as noted on the quotation. Deviations require
+     re-confirmation before booking.
+
+2.3  Rate adjustments may apply if cargo weight or volume varies by more than
+     ten percent (10%) from the quoted figures, or if the shipper changes the
+     port pair after booking acceptance.
+
+2.4  Bunker Adjustment Factor (BAF), Currency Adjustment Factor (CAF), and
+     Peak Season Surcharge (PSS) are pass-through charges and may be applied
+     at time of shipment even if not itemised on the original QT.
+
+================================================================================
+3. STANDARD TRANSIT TIMES (INDICATIVE)
+================================================================================
+
+Transit times are estimates only and are not guaranteed unless expressly
+confirmed in writing under a time-definite service addendum.
+
+Route                          Mode    Standard Transit    Express Option
+-----------------------------  ------  ------------------  ----------------
+Mumbai (INNSA) → Singapore     Ocean   14–16 days          10–12 days
+Mumbai (INNSA) → Rotterdam     Ocean   28–32 days          24–26 days
+Chennai (INMAA) → Dubai (AEJEA) Ocean   8–10 days           6–8 days
+Shanghai (CNSHA) → Los Angeles Ocean   18–22 days          14–16 days
+Delhi (DEL) → Frankfurt (FRA)  Air     3–5 days            2–3 days
+Bangalore (BLR) → Hong Kong    Air     2–4 days            1–2 days
+
+Note: Transit begins at cargo receipt at origin CFS/warehouse, not from
+quotation date. Customs holds, vessel rollovers, and weather delays are
+excluded from transit commitments.
+
+================================================================================
+4. DOCUMENTATION REQUIREMENTS
+================================================================================
+
+4.1  Commercial Invoice — must show shipper, consignee, HS code, Incoterm,
+     unit value, and country of origin. Minimum three (3) copies for ocean;
+     two (2) for air.
+
+4.2  Packing List — required for all shipments. Must match invoice quantities
+     and gross/net weights within 2% tolerance.
+
+4.3  Certificate of Origin — mandatory for preferential duty claims under
+     ASEAN-India FTA, EU GSP, or US GSP where applicable.
+
+4.4  Fumigation Certificate — required for all wooden packaging (pallets,
+     crates, dunnage) on Australia and New Zealand lanes.
+
+4.5  Dangerous Goods Declaration (DGD) — IMDG-compliant for ocean; IATA DGR
+     for air. Booking must be submitted minimum seventy-two (72) hours before
+     cut-off for DG cargo.
+
+4.6  Letter of Credit (LC) shipments — draft BL and documents must be
+     presented for approval minimum five (5) business days before vessel ETD.
+
+================================================================================
+5. LIABILITY AND INSURANCE
+================================================================================
+
+5.1  Fr8Labs liability as freight forwarder is limited to USD 2.00 per
+     kilogram or the value of the goods, whichever is lower, unless a higher
+     limit is agreed in writing prior to shipment.
+
+5.2  Carrier liability applies per applicable convention (Hague-Visby, Montreal
+     Convention, or CMNI) depending on mode and lane.
+
+5.3  Comprehensive cargo insurance is strongly recommended. Fr8Labs can arrange
+     all-risk coverage at 0.35% of invoice value plus freight, minimum premium
+     USD 50 per shipment.
+
+5.4  Claims for visible damage must be noted on the delivery receipt at time of
+     delivery. Concealed damage claims must be filed within three (3) business
+     days of delivery.
+
+================================================================================
+6. FREE TIME AND DETENTION / DEMURRAGE
+================================================================================
+
+6.1  Standard import free time at destination port:
+     - FCL: 7 days combined (detention + demurrage) unless carrier tariff
+       states otherwise.
+     - LCL: 5 days at CFS; storage charges apply thereafter at USD 18/CBM/day.
+
+6.2  Export free time at origin: 5 days from empty container release. Day 6
+     onward: USD 45 per 20' container / USD 75 per 40' container per day.
+
+6.3  Fr8Labs will notify the consignee at day 3 of free time remaining via
+     email to the contact on the booking.
+
+================================================================================
+7. PROHIBITED AND RESTRICTED CARGO
+================================================================================
+
+The following are not accepted without prior written approval from Fr8Labs
+Compliance:
+
+  - Explosives, ammunition, and military hardware
+  - Lithium batteries (standalone, UN3480/3481) above IATA Section II limits
+  - Live animals and perishable goods requiring temperature control (reefer)
+  - Counterfeit goods, sanctioned-party cargo, and dual-use items under
+    EAR/ITAR without export licence
+  - Personal effects exceeding USD 5,000 declared value on commercial lanes
+
+================================================================================
+8. PAYMENT TERMS
+================================================================================
+
+8.1  Standard credit customers: invoices due net thirty (30) days from invoice
+     date. New customers: prepayment or CAD basis until credit limit approved.
+
+8.2  Disbursement invoices (duty, port charges, trucking) are due within seven
+     (7) days of presentation regardless of freight payment terms.
+
+8.3  A late payment fee of 1.5% per month applies to overdue balances.
+
+================================================================================
+9. CLAIMS PROCEDURE
+================================================================================
+
+Step 1: Notify Fr8Labs claims desk at claims@fr8labs.co within seven (7) days
+        of delivery (or expected delivery for total loss).
+
+Step 2: Submit claim form F8-CLM-01 with supporting documents: commercial
+        invoice, packing list, photos, survey report (if applicable), and
+        original damaged cargo retention proof.
+
+Step 3: Fr8Labs will acknowledge within two (2) business days and issue a claim
+        reference number (format: CLM-YYYY-NNNNN).
+
+Step 4: Settlement target: forty-five (45) days from complete documentation
+        receipt, subject to carrier/insurer response times.
+
+Maximum claim filing deadline: nine (9) months from date of delivery.
+
+================================================================================
+10. CONTACTS
+================================================================================
+
+Operations (bookings):     ops@fr8labs.co
+Documentation:             docs@fr8labs.co
+Claims:                    claims@fr8labs.co
+Customer Success:          customersuccess@fr8labs.co
+
+Office hours: Monday–Friday, 09:00–18:00 IST / GST (excluding public holidays).
+
+================================================================================
+END OF DOCUMENT
+================================================================================

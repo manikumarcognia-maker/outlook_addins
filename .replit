@@ -1,0 +1,18 @@
+run = "bash scripts/replit-start.sh"
+modules = ["python-3.11", "nodejs-20"]
+
+[nix]
+channel = "stable-24_05"
+
+[deployment]
+deploymentTarget = "autoscale"
+build = ["bash", "scripts/replit-build.sh"]
+run = ["bash", "scripts/replit-start.sh"]
+
+[env]
+PYTHONUNBUFFERED = "1"
+PORT = "4000"
+
+[[ports]]
+localPort = 4000
+externalPort = 80

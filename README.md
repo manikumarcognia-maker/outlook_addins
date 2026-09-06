@@ -48,3 +48,41 @@ python -m uvicorn app.main:app --reload --port 4000
 ```
 
 RAG document indexing (CLI): see [backend/README.md](backend/README.md).
+
+## Git / Replit deploy
+
+Do **not** commit `backend/.env`, `frontend/.env`, `node_modules`, or `.venv`. Those are gitignored.
+
+Remote already pointed at: `https://github.com/manikumarcognia-maker/outlook_addins.git`
+
+```bash
+git add .
+git status   # confirm no .env files
+git commit -m "Add Outlook add-in UI, FastAPI RAG backend, and Replit deploy files."
+git push -u origin addins_V1
+```
+
+### Replit
+
+1. Create a Repl from that GitHub repo (or import the same branch).
+2. Use **Autoscale** or a reserved VM — RAG + Node build needs more RAM than a free Repl.
+3. Add **Secrets** (not a committed `.env`):
+
+| Secret | Required |
+|---|---|
+| `GOOGLE_API_KEY` | yes |
+| `QDRANT_URL` | yes |
+| `QDRANT_API_KEY` | yes for Qdrant Cloud |
+| `COHERE_API_KEY` | yes |
+| `QDRANT_COLLECTION` | optional (`fr8labs_production`) |
+| `GENERATION_MODEL` | optional (`gemini-3.5-flash-lite`) |
+| `ADDIN_PUBLIC_URL` | yes after first deploy: `https://<your-repl>.replit.app` |
+
+4. Run **Build** then **Run**. The API and the built add-in are served from one process (`$PORT`).
+5. Check `https://<your-repl>/health`.
+6. Sideload Outlook from `https://<your-repl>/manifest.xml` (URLs are rewritten from localhost to `ADDIN_PUBLIC_URL`).
+7. Admin UI: `https://<your-repl>/admin.html` — still **unauthenticated**; do not leave it public without auth.
+
+Leave `VITE_API_BASE_URL` empty so the UI calls `/api` on the same host.
+
+Local Outlook testing still uses `npm run dev` on `https://localhost:3000` and `frontend/manifest.xml`.

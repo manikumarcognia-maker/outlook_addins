@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Outlook Add-in — Fr8Labs Integration Plan</title>
+  <style>
+    body {
+      font-family: Calibri, "Segoe UI", Arial, sans-serif;
+      font-size: 11pt;
+      line-height: 1.45;
+      color: #1a1a1a;
+      max-width: 820px;
+      margin: 40px auto;
+      padding: 0 24px 48px;
+    }
+    h1 {
+      font-size: 22pt;
+      color: #0f172a;
+      border-bottom: 2px solid #2563eb;
+      padding-bottom: 8px;
+      margin-bottom: 6px;
+    }
+    .subtitle {
+      color: #475569;
+      font-size: 12pt;
+      margin-bottom: 28px;
+    }
+    h2 {
+      font-size: 14pt;
+      color: #0f172a;
+      margin-top: 28px;
+      margin-bottom: 10px;
+      border-bottom: 1px solid #e2e8f0;
+      padding-bottom: 4px;
+    }
+    h3 {
+      font-size: 12pt;
+      color: #1e293b;
+      margin-top: 18px;
+      margin-bottom: 6px;
+    }
+    p, li { margin: 6px 0; }
+    ul, ol { margin-top: 4px; margin-bottom: 10px; }
+    table {
+      border-collapse: collapse;
+      width: 100%;
+      margin: 12px 0 18px;
+      font-size: 10.5pt;
+    }
+    th, td {
+      border: 1px solid #cbd5e1;
+      padding: 8px 10px;
+      text-align: left;
+      vertical-align: top;
+    }
+    th {
+      background: #f1f5f9;
+      font-weight: 600;
+      color: #0f172a;
+    }
+    .ok { color: #15803d; font-weight: 600; }
+    .warn { color: #b45309; font-weight: 600; }
+    .code {
+      font-family: Consolas, "Courier New", monospace;
+      font-size: 9.5pt;
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      padding: 12px 14px;
+      white-space: pre;
+      margin: 10px 0 16px;
+    }
+    .callout {
+      background: #eff6ff;
+      border-left: 4px solid #2563eb;
+      padding: 10px 14px;
+      margin: 14px 0;
+    }
+    .mvp {
+      background: #ecfdf5;
+      border-left: 4px solid #059669;
+      padding: 10px 14px;
+      margin: 14px 0;
+    }
+    .diagram-wrap {
+      text-align: center;
+      margin: 18px 0 8px;
+      page-break-inside: avoid;
+    }
+    .caption {
+      font-size: 9.5pt;
+      color: #64748b;
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    .meta {
+      font-size: 10pt;
+      color: #64748b;
+    }
+    .footer {
+      margin-top: 36px;
+      padding-top: 12px;
+      border-top: 1px solid #e2e8f0;
+      font-size: 9.5pt;
+      color: #64748b;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Outlook Add-in — Fr8Labs Integration Plan</h1>
+  <p class="subtitle">Feasibility, prerequisites, requirements, and solution approach for three ribbon buttons</p>
+  <p class="meta"><strong>Status:</strong> Planning / MVP ready &nbsp;·&nbsp; <strong>Last updated:</strong> 3 September 2026</p>
+
+  <div class="mvp">
+    <strong>MVP stack decision:</strong> Use a free LLM via <strong>Groq</strong> and a free vector store via <strong>Qdrant Cloud (free tier)</strong> for RAG. The architecture keeps the LLM provider swappable — any chat-completions API can replace Groq later without changing the Outlook add-in UI.
+  </div>
+
+  <h2>1. What you are building</h2>
+  <p>
+    A single Outlook add-in with three ribbon buttons that appear on every email. Users stay inside Outlook;
+    the add-in talks to a small backend, which in turn talks to an LLM (with optional RAG), Fr8Labs MCP, and (when available) Fr8Labs customer APIs.
+  </p>
+
+  <h2>2. Architecture diagram</h2>
+  <div class="diagram-wrap">
+    <!-- Architecture SVG: updated for Groq + Qdrant, no vendor-locked LLM name -->
+    <svg xmlns="http://www.w3.org/2000/svg" width="720" height="520" viewBox="0 0 720 520" role="img" aria-label="Outlook add-in architecture">
+      <defs>
+        <style>
+          .box { stroke-width: 1.5; }
+          .t1 { font: 600 13px Calibri, Segoe UI, Arial, sans-serif; fill: #0f172a; }
+          .t2 { font: 400 11px Calibri, Segoe UI, Arial, sans-serif; fill: #475569; }
+          .line { stroke: #94a3b8; stroke-width: 1.5; fill: none; }
+        </style>
+        <marker id="arrow" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+          <path d="M0,0 L6,3 L0,6 Z" fill="#94a3b8" />
+        </marker>
+      </defs>
+
+      <!-- Root -->
+      <rect x="260" y="16" width="200" height="48" rx="10" fill="#f8fafc" stroke="#94a3b8" class="box"/>
+      <text x="360" y="36" text-anchor="middle" class="t1">Outlook add-in</text>
+      <text x="360" y="52" text-anchor="middle" class="t2">Email ribbon · Office.js</text>
+
+      <!-- Buttons -->
+      <rect x="40" y="100" width="170" height="52" rx="10" fill="#d1fae5" stroke="#34d399" class="box"/>
+      <text x="125" y="122" text-anchor="middle" class="t1">AI draft reply</text>
+      <text x="125" y="138" text-anchor="middle" class="t2">Button 1</text>
+
+      <rect x="275" y="100" width="170" height="52" rx="10" fill="#ddd6fe" stroke="#a78bfa" class="box"/>
+      <text x="360" y="122" text-anchor="middle" class="t1">Create quote</text>
+      <text x="360" y="138" text-anchor="middle" class="t2">Button 2 · MCP Actions</text>
+
+      <rect x="510" y="100" width="170" height="52" rx="10" fill="#fed7aa" stroke="#fb923c" class="box"/>
+      <text x="595" y="122" text-anchor="middle" class="t1">Verify / create</text>
+      <text x="595" y="138" text-anchor="middle" class="t2">Button 3 · customer</text>
+
+      <!-- Mid layer -->
+      <rect x="100" y="200" width="200" height="52" rx="10" fill="#f1f5f9" stroke="#94a3b8" class="box"/>
+      <text x="200" y="222" text-anchor="middle" class="t1">Backend API</text>
+      <text x="200" y="238" text-anchor="middle" class="t2">Node.js / Replit · SSO auth</text>
+
+      <rect x="400" y="200" width="220" height="52" rx="10" fill="#ddd6fe" stroke="#a78bfa" class="box"/>
+      <text x="510" y="222" text-anchor="middle" class="t1">Fr8Labs MCP Actions</text>
+      <text x="510" y="238" text-anchor="middle" class="t2">mcp-fms-actions endpoint</text>
+
+      <!-- Bottom services -->
+      <rect x="30" y="310" width="200" height="64" rx="10" fill="#d1fae5" stroke="#34d399" class="box"/>
+      <text x="130" y="332" text-anchor="middle" class="t1">LLM (Groq · MVP)</text>
+      <text x="130" y="348" text-anchor="middle" class="t2">Swappable chat API</text>
+      <text x="130" y="364" text-anchor="middle" class="t2">+ Qdrant RAG (free tier)</text>
+
+      <rect x="260" y="310" width="200" height="64" rx="10" fill="#ddd6fe" stroke="#a78bfa" class="box"/>
+      <text x="360" y="336" text-anchor="middle" class="t1">Fr8Labs Analytics</text>
+      <text x="360" y="354" text-anchor="middle" class="t2">mcp-analytics · read-only</text>
+
+      <rect x="490" y="310" width="200" height="64" rx="10" fill="#fed7aa" stroke="#fb923c" class="box"/>
+      <text x="590" y="336" text-anchor="middle" class="t1">Customer API</text>
+      <text x="590" y="354" text-anchor="middle" class="t2">Fr8Labs REST · blocker</text>
+
+      <!-- FMS -->
+      <rect x="230" y="430" width="260" height="52" rx="10" fill="#f8fafc" stroke="#94a3b8" class="box"/>
+      <text x="360" y="450" text-anchor="middle" class="t1">Fr8Labs FMS</text>
+      <text x="360" y="466" text-anchor="middle" class="t2">Quote / Job / Customer records</text>
+
+      <!-- Lines from root to buttons -->
+      <line x1="360" y1="64" x2="125" y2="100" class="line" marker-end="url(#arrow)"/>
+      <line x1="360" y1="64" x2="360" y2="100" class="line" marker-end="url(#arrow)"/>
+      <line x1="360" y1="64" x2="595" y2="100" class="line" marker-end="url(#arrow)"/>
+
+      <!-- Button 1 -> Backend -->
+      <line x1="125" y1="152" x2="180" y2="200" class="line" marker-end="url(#arrow)"/>
+      <!-- Button 2 -> Backend and MCP Actions -->
+      <line x1="320" y1="152" x2="220" y2="200" class="line" marker-end="url(#arrow)"/>
+      <line x1="400" y1="152" x2="480" y2="200" class="line" marker-end="url(#arrow)"/>
+      <!-- Button 3 -> MCP Actions -->
+      <line x1="595" y1="152" x2="540" y2="200" class="line" marker-end="url(#arrow)"/>
+
+      <!-- Backend -> LLM, Analytics -->
+      <line x1="160" y1="252" x2="130" y2="310" class="line" marker-end="url(#arrow)"/>
+      <line x1="240" y1="252" x2="320" y2="310" class="line" marker-end="url(#arrow)"/>
+
+      <!-- MCP Actions -> Analytics, Customer API -->
+      <line x1="470" y1="252" x2="380" y2="310" class="line" marker-end="url(#arrow)"/>
+      <line x1="560" y1="252" x2="590" y2="310" class="line" marker-end="url(#arrow)"/>
+
+      <!-- Analytics + Customer -> FMS -->
+      <line x1="360" y1="374" x2="360" y2="430" class="line" marker-end="url(#arrow)"/>
+      <line x1="590" y1="374" x2="420" y2="430" class="line" marker-end="url(#arrow)"/>
+    </svg>
+  </div>
+  <p class="caption">Figure 1. High-level architecture — Outlook ribbon → Backend / Fr8Labs MCP → LLM (Groq) + Qdrant RAG + FMS</p>
+
+  <h2>3. Feasibility assessment</h2>
+  <table>
+    <thead>
+      <tr>
+        <th>Button</th>
+        <th>Feasibility</th>
+        <th>Confidence</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>AI Draft Reply</td>
+        <td class="ok">Fully feasible today</td>
+        <td>High</td>
+      </tr>
+      <tr>
+        <td>Create Quote (MCP Actions)</td>
+        <td class="ok">Feasible — MCP Actions endpoint is live</td>
+        <td>High</td>
+      </tr>
+      <tr>
+        <td>Verify / Create Customer</td>
+        <td class="warn">Partially blocked — awaiting Fr8Labs response for create API</td>
+        <td>Medium</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h2>4. Prerequisites</h2>
+
+  <h3>4.1 Microsoft 365</h3>
+  <ul>
+    <li>M365 Business or Enterprise subscription (personal Outlook.com will not work for org deployment)</li>
+    <li>Global Admin or Exchange Admin account for deployment</li>
+    <li>Azure App Registration in Entra ID — one-time SSO setup so users never see a login screen</li>
+    <li>Node.js 20+ on developer machines</li>
+  </ul>
+
+  <h3>4.2 Fr8Labs</h3>
+  <ul>
+    <li>Active Fr8Labs account with MCP access enabled by admin under Team Access</li>
+    <li>Both MCP connectors activated:
+      <ul>
+        <li><code>https://notification-hub.fr8labs.co/mcp-analytics</code> (read)</li>
+        <li><code>https://notification-hub.fr8labs.co/mcp-fms-actions</code> (write / propose)</li>
+      </ul>
+    </li>
+    <li>For Button 3 Create: partner API access from Fr8Labs developer package — current blocker</li>
+  </ul>
+
+  <h3>4.3 MVP AI stack (free tier)</h3>
+  <table>
+    <thead>
+      <tr>
+        <th>Component</th>
+        <th>MVP choice</th>
+        <th>Notes</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>LLM</td>
+        <td><strong>Groq</strong> (free tier)</td>
+        <td>Fast inference; OpenAI-compatible API shape. Backend abstracts the provider so you can swap later.</td>
+      </tr>
+      <tr>
+        <td>Vector DB / RAG</td>
+        <td><strong>Qdrant Cloud free tier</strong></td>
+        <td>Store freight reply templates, terminology, and sample phrasing. Retrieve top chunks before the LLM call.</td>
+      </tr>
+      <tr>
+        <td>Embeddings</td>
+        <td>Free / low-cost embedding model via Groq or a compatible free embeddings API</td>
+        <td>Keep embedding + LLM behind the same backend config.</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h3>4.4 Hosting (Replit is viable for MVP)</h3>
+  <ul>
+    <li><strong>Frontend:</strong> Replit or Netlify (static files, must be HTTPS)</li>
+    <li><strong>Backend API:</strong> Replit Node.js repl (Always On for production; free tier OK for early dev)</li>
+    <li>Replit <code>.replit.app</code> HTTPS satisfies Outlook’s requirement — no custom domain needed for MVP</li>
+  </ul>
+
+  <h2>5. Button 1 — AI Draft Reply</h2>
+  <p>
+    <strong>How it works:</strong> User opens an email → clicks the button → add-in reads the email body via Office.js →
+    sends sanitised text to your backend → backend retrieves RAG context from Qdrant → calls Groq → draft reply is
+    pre-filled in the Outlook reply window. User reviews and sends. Nothing is auto-sent.
+  </p>
+  <h3>Key implementation points</h3>
+  <ul>
+    <li>Use Office.js <code>item.body.getAsync</code> to read email content</li>
+    <li>Strip HTML on the backend before sending to the LLM (reduces prompt-injection risk)</li>
+    <li>Enforce ~8,000 character limit</li>
+    <li>RAG: store freight templates/terminology in <strong>Qdrant (free)</strong>; retrieve relevant chunks before the LLM call</li>
+    <li>Optional: if the sender is a known customer, query Fr8Labs Analytics and pass recent shipment context into the prompt</li>
+  </ul>
+  <p><strong>Inputs:</strong> Email body, sender info, Qdrant RAG chunks, optional Fr8Labs Analytics context<br />
+     <strong>Output:</strong> Pre-filled Outlook reply draft</p>
+
+  <h2>6. Button 2 — Create Quote</h2>
+  <p>
+    <strong>How it works:</strong> User reads a rate-request email → clicks the button → add-in / backend parses customer,
+    route, and cargo → backend calls Fr8Labs MCP Actions (<code>mcp-fms-actions</code>) to propose a quote →
+    user sees the proposal in the task pane and approves → <code>QT-XXXX</code> is created in Fr8Labs FMS.
+  </p>
+  <h3>Key implementation points</h3>
+  <ul>
+    <li>Backend authenticates to Fr8Labs MCP Actions using Fr8Labs OAuth (user’s Fr8Labs login)</li>
+    <li>Flow is <strong>propose → user approve</strong> — nothing is saved until approval (fits the task pane UX)</li>
+    <li>Task pane shows proposed quote (customer, route, charges, total) with Approve / Edit / Reject</li>
+    <li>Quote can later be converted to a job inside Fr8Labs as usual</li>
+  </ul>
+  <p><strong>Inputs:</strong> Email body parsed for customer name, origin/destination, cargo type, commodity, weight<br />
+     <strong>Output:</strong> <code>QT-XXXX</code> created in Fr8Labs FMS after user approval</p>
+
+  <h2>7. Button 3 — Verify / Create Customer</h2>
+  <p>Most complex button; create path has a current blocker.</p>
+
+  <h3>Verify flow (feasible now)</h3>
+  <ul>
+    <li>Use Fr8Labs MCP Analytics (read-only) to ask whether the sender domain / company is an existing customer or partner</li>
+    <li>If found: show customer profile in the task pane (name, account status, recent shipments)</li>
+  </ul>
+
+  <h3>Create flow (blocked pending Fr8Labs)</h3>
+  <ul>
+    <li>If not found: show “Create as new customer” form pre-filled from the email</li>
+    <li>On submit: POST to Fr8Labs REST API to create the customer — <strong>no publicly documented endpoint yet</strong></li>
+    <li>Action: follow up with <code>customersuccess@fr8labs.co</code> for the Partner API / developer package</li>
+  </ul>
+
+  <div class="callout">
+    <strong>While blocked:</strong> Build Buttons 1 and 2 fully. Build Button 3 Verify immediately.
+    For Create, ship a placeholder (pre-filled ops email or link to Fr8Labs new-customer UI).
+    Swap in the real POST when API access arrives — UI stays the same.
+  </div>
+
+  <h2>8. Architecture &amp; hosting on Replit</h2>
+
+  <h3>Frontend (static)</h3>
+  <div class="code">Replit Repl 1 — Frontend
+  /manifest.xml         ← add-in identity for M365 Admin Center
+  /taskpane.html        ← button panel UI
+  /button1.js           ← draft reply logic
+  /button2.js           ← create quote logic
+  /button3.js           ← verify / create customer logic
+  /icons/               ← 16px, 32px, 80px icons (required)</div>
+
+  <h3>Backend API (Node.js)</h3>
+  <div class="code">Replit Repl 2 — Backend API
+  POST /draft-reply       ← Groq LLM + Qdrant RAG
+  POST /create-quote      ← Fr8Labs MCP Actions
+  GET  /verify-customer   ← Fr8Labs MCP Analytics
+  POST /create-customer   ← Fr8Labs REST API (pending)</div>
+
+  <h3>Replit caveats</h3>
+  <ul>
+    <li>Free tier sleeps after inactivity — fine for dev; use Always On or an UptimeRobot ping for MVP demos</li>
+    <li>For production later: move backend to Azure App Service or a small VPS; frontend can stay on Replit or move to Netlify</li>
+  </ul>
+
+  <h2>9. Deployment steps (in order)</h2>
+  <ol>
+    <li>
+      <strong>Azure App Registration</strong> — Entra ID → App Registrations → New registration
+      (“Fr8Labs Outlook Add-in”, single-tenant). Create <code>access_as_user</code> scope, pre-authorise Office app IDs,
+      generate client secret. Enables SSO.
+    </li>
+    <li>
+      <strong>Deploy frontend to Replit</strong> — static HTML/JS, icons, <code>manifest.xml</code>. HTTPS URL goes into the manifest.
+    </li>
+    <li>
+      <strong>Deploy backend API to Replit</strong> — Express endpoints for draft-reply (Groq + Qdrant), create-quote, verify-customer.
+      Keep API keys in Replit Secrets.
+    </li>
+    <li>
+      <strong>Build and validate the manifest</strong> — GUID, version, HTTPS URLs, Azure app IDs.
+      Validate with <code>office-addin-manifest</code> (zero errors).
+    </li>
+    <li>
+      <strong>Sideload and test</strong> — Outlook Web → Settings → Add-ins → Add from file. Test all three buttons end-to-end.
+    </li>
+    <li>
+      <strong>Deploy org-wide</strong> — M365 Admin Center → Settings → Integrated Apps → Upload custom app.
+      Assign to pilot group or all users (ribbon appears within ~24 hours).
+    </li>
+  </ol>
+
+  <h2>10. Blockers &amp; risks</h2>
+  <table>
+    <thead>
+      <tr>
+        <th>Item</th>
+        <th>Status</th>
+        <th>Action</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Fr8Labs MCP Actions (create quote)</td>
+        <td class="ok">Live</td>
+        <td>Enable in Fr8Labs admin under Team Access</td>
+      </tr>
+      <tr>
+        <td>Fr8Labs Analytics (verify customer)</td>
+        <td class="ok">Live</td>
+        <td>Same — enable in admin panel</td>
+      </tr>
+      <tr>
+        <td>Fr8Labs customer creation API</td>
+        <td class="warn">Blocked</td>
+        <td>Follow up with customersuccess@fr8labs.co; ship placeholder UI</td>
+      </tr>
+      <tr>
+        <td>Replit sleep (free tier)</td>
+        <td class="warn">Risk</td>
+        <td>UptimeRobot ping or Replit Always On</td>
+      </tr>
+      <tr>
+        <td>Groq / Qdrant free-tier limits</td>
+        <td class="warn">Watch</td>
+        <td>Monitor rate limits; keep provider swappable behind backend config</td>
+      </tr>
+      <tr>
+        <td>M365 Admin access</td>
+        <td>Dependency</td>
+        <td>Needs Global / Exchange Admin for manifest upload</td>
+      </tr>
+      <tr>
+        <td>Azure App Registration</td>
+        <td>One-time setup</td>
+        <td>Needs Azure portal access</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h2>11. Recommended build order</h2>
+  <ol>
+    <li><strong>Button 1 (AI Draft Reply)</strong> — self-contained with Groq + Qdrant; proves the add-in scaffold; immediate value</li>
+    <li><strong>Button 2 (Create Quote)</strong> — once Fr8Labs MCP Actions is enabled</li>
+    <li><strong>Button 3 Verify</strong> — Analytics MCP lookup (works today)</li>
+    <li><strong>Button 3 Create</strong> — after Fr8Labs Partner API access is granted</li>
+  </ol>
+
+  <div class="footer">
+    Outlook Add-in — Fr8Labs Integration Plan · Internal planning document · MVP: Groq + Qdrant Cloud free tier · LLM provider intentionally abstracted
+  </div>
+
+</body>
+</html>
