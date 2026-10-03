@@ -1,6 +1,7 @@
 import tempfile
 from pathlib import Path
 
+import psycopg
 from fastapi import APIRouter, File, HTTPException, UploadFile
 from pydantic import BaseModel
 
@@ -8,7 +9,7 @@ from rag.config import settings
 from rag.ingest import ingest_file
 from rag.loaders import SUPPORTED_EXTENSIONS
 from rag.models import citation_from_document
-from rag.qdrant_store import get_client, list_documents, mark_superseded
+from rag.pg_store import list_documents, mark_superseded
 from rag.retrieval import hybrid_search
 
 router = APIRouter()
@@ -59,12 +60,16 @@ def _http_error_for_exception(exc: Exception) -> HTTPException:
         return HTTPException(status_code=400, detail=message)
     if "429" in message or "rate limit" in lowered or "resource exhausted" in lowered:
         return HTTPException(status_code=502, detail=message)
+    if isinstance(exc, psycopg.Error) or "connection" in lowered or "ssl" in lowered:
+        return HTTPException(
+            status_code=503,
+            detail="Database temporarily unavailable. Wait a few seconds and retry.",
+        )
     return HTTPException(status_code=500, detail=message)
 
 
 def _find_document(document_id: str) -> dict | None:
-    client = get_client()
-    for doc in list_documents(client):
+    for doc in list_documents():
         if doc.get("document_id") == document_id:
             return doc
     return None
@@ -114,15 +119,16 @@ async def upload_document(
 
 @router.get("/documents")
 def get_documents() -> list[dict]:
-    client = get_client()
-    return list_documents(client)
+    try:
+        return list_documents()
+    except Exception as exc:
+        raise _http_error_for_exception(exc) from exc
 
 
 @router.post("/documents/{document_id}/supersede")
 def supersede_document(document_id: str) -> dict:
     try:
-        client = get_client()
-        mark_superseded(client, document_id)
+        mark_superseded(document_id)
     except Exception as exc:
         raise _http_error_for_exception(exc) from exc
     return {"document_id": document_id, "superseded": True}

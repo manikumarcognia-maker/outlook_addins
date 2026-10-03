@@ -15,11 +15,8 @@ class Settings(BaseSettings):
     )
 
     GOOGLE_API_KEY: str
-    QDRANT_URL: str
-    QDRANT_API_KEY: str | None = None
-    QDRANT_COLLECTION: str = "fr8labs_production"
-    QDRANT_DENSE_VECTOR_NAME: str = "dense"
-    QDRANT_SPARSE_VECTOR_NAME: str = "sparse"
+    DATABASE_URL: str
+    DEFAULT_COMPANY_ID: str = "default"
     RAW_DOCUMENT_DIR: Path = Path("./document_store/raw")
     CHUNK_SIZE: int = 1000
     CHUNK_OVERLAP: int = 200
@@ -31,6 +28,10 @@ class Settings(BaseSettings):
 
     COHERE_API_KEY: str
     GENERATION_MODEL: str = "gemini-3.5-flash-lite"
+    EMAIL_AGENT_EXTRACTION_MODEL: str = ""  # empty = use GENERATION_MODEL
+    EMAIL_AGENT_SUMMARY_MODEL: str = ""  # empty = use GENERATION_MODEL
+    EMAIL_AGENT_REFINE_MODEL: str = ""  # empty = use GENERATION_MODEL
+    EMAIL_AGENT_SYNTHESIS_MODEL: str = ""  # empty = use GENERATION_MODEL
     COHERE_RERANK_MODEL: str = "rerank-english-v3.0"
     RETRIEVAL_TOP_K: int = 30
     RERANK_TOP_N: int = 5
@@ -38,6 +39,7 @@ class Settings(BaseSettings):
     GENERATION_MAX_OUTPUT_TOKENS: int = 768
     MAX_UPLOAD_BYTES: int = 20_971_520
     LOG_FILE: Path = Path("./logs/fr8labs.log")
+    EMAIL_AGENT_AUDIT_LOG: Path = Path("./logs/email_agent_audit.jsonl")
     LOG_LEVEL: str = "INFO"
     DRAFT_REPLY_TIMEOUT_SEC: int = 180
 

@@ -5,20 +5,19 @@ import argparse
 import sys
 
 from rag.ingest import ingest_file
-from rag.qdrant_store import get_client, list_documents, mark_superseded
+from rag.pg_store import list_documents, mark_superseded
 
 
 def main() -> int:
     parser = argparse.ArgumentParser(description="Fr8Labs RAG document indexing")
     parser.add_argument("file_path", nargs="?", help="Path to PDF, DOCX, or TXT file")
-    parser.add_argument("--list", action="store_true", help="List indexed documents from Qdrant")
+    parser.add_argument("--list", action="store_true", help="List indexed documents from Postgres")
     parser.add_argument("--supersede", metavar="DOCUMENT_ID", help="Mark document superseded and delete chunks")
 
     args = parser.parse_args()
 
     if args.list:
-        client = get_client()
-        docs = list_documents(client)
+        docs = list_documents()
         if not docs:
             print("No documents indexed.")
             return 0
@@ -31,8 +30,7 @@ def main() -> int:
         return 0
 
     if args.supersede:
-        client = get_client()
-        mark_superseded(client, args.supersede)
+        mark_superseded(args.supersede)
         print(f"Superseded and deleted chunks for document_id={args.supersede}")
         return 0
 

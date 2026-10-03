@@ -1,14 +1,17 @@
 {
-  "name": "fr8labs-outlook-addin-v2",
+  "name": "fr8labs-outlook-addin",
   "version": "1.0.0",
   "private": true,
   "type": "module",
   "scripts": {
     "dev": "vite",
+    "check-dev": "node scripts/check-dev-server.mjs",
+    "dev:kill": "node scripts/kill-port.mjs 3000",
     "build": "tsc --noEmit && vite build",
     "preview": "vite preview",
     "validate": "office-addin-manifest validate manifest.xml",
-    "certs": "office-addin-dev-certs install"
+    "certs": "office-addin-dev-certs install",
+    "test": "vitest run"
   },
   "dependencies": {
     "react": "^19.0.0",
@@ -22,6 +25,7 @@
     "office-addin-dev-certs": "^1.13.5",
     "office-addin-manifest": "^1.13.5",
     "typescript": "^5.7.2",
-    "vite": "^6.0.3"
+    "vite": "^6.0.3",
+    "vitest": "^3.2.7"
   }
 }

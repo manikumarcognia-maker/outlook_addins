@@ -2,9 +2,10 @@ from langchain_core.documents import Document
 
 from rag.chunking import split_into_chunks
 from rag.document_store import save_uploaded_file
+from rag.embeddings import embed_documents_with_retry, get_dense_embeddings
 from rag.loaders import load_document
 from rag.models import UploadedFile
-from rag.qdrant_store import build_vector_store, ensure_collection, get_client
+from rag.pg_store import insert_document_with_chunks, warm_pg_runtime
 
 
 def attach_chunk_metadata(
@@ -43,12 +44,12 @@ def ingest_file(source_path: str) -> str:
 
     chunks = attach_chunk_metadata(chunks, uploaded)
 
-    client = get_client()
-    ensure_collection(client)
-    vector_store = build_vector_store(client)
+    warm_pg_runtime()
+    texts = [chunk.page_content for chunk in chunks]
+    dense_vectors = embed_documents_with_retry(get_dense_embeddings(), texts)
 
-    print("Embedding and upserting to Qdrant (dense + sparse hybrid)...")
-    vector_store.add_documents(chunks)
+    print("Embedding and upserting to Postgres (dense pgvector)...")
+    insert_document_with_chunks(uploaded, chunks, dense_vectors)
     print(f"Done. document_id={uploaded.document_id}")
 
     return str(uploaded.document_id)

@@ -29,12 +29,27 @@ async function readEmailContext(): Promise<EmailContext> {
   const subject = sanitizeText(readItem.subject || "(no subject)");
   const body = truncateText(sanitizeText(bodyRaw));
 
+  const threadId = readItem.conversationId || item.itemId || "";
+  const sourceMessageId =
+    (readItem as Office.MessageRead & { internetMessageId?: string }).internetMessageId ||
+    item.itemId ||
+    "";
+
+  if (!threadId.trim()) {
+    throw new Error("Could not read conversation id for this message.");
+  }
+  if (!sourceMessageId.trim()) {
+    throw new Error("Could not read message id for dedupe.");
+  }
+
   return {
     subject,
     body,
     senderEmail,
     senderName,
     senderDomain: extractDomain(senderEmail),
+    threadId,
+    sourceMessageId,
   };
 }
 

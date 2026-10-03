@@ -6,6 +6,10 @@ export interface EmailContext {
   senderEmail: string;
   senderName: string;
   senderDomain: string;
+  /** Outlook conversation id — thread key for the email agent */
+  threadId: string;
+  /** Outlook message id for inbound dedupe when calling /api/email-agent/inbound */
+  sourceMessageId: string;
 }
 
 export interface DraftReplyInput {
@@ -17,6 +21,33 @@ export interface DraftReplyInput {
 
 export interface DraftReplyResult {
   draft: string;
+}
+
+export interface EmailAgentConversationMessage {
+  sourceMessageId: string;
+  body: string;
+  receivedAt?: string;
+}
+
+export interface EmailAgentInboundInput {
+  threadId: string;
+  emailBody: string;
+  sourceMessageId: string;
+  conversationMessages: EmailAgentConversationMessage[];
+}
+
+export interface EmailAgentCitation {
+  documentId: string;
+  originalFilename: string;
+  chunkIndex: number;
+}
+
+export interface EmailAgentDraftResult {
+  draftId: string;
+  draft: string;
+  duplicate: boolean;
+  retrievalStatus: string;
+  citations: EmailAgentCitation[];
 }
 
 export interface QuoteRequest {

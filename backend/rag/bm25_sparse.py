@@ -10,8 +10,9 @@ import unicodedata
 from collections import defaultdict
 from pathlib import Path
 
+from dataclasses import dataclass
+
 import mmh3
-from langchain_qdrant.sparse_embeddings import SparseEmbeddings, SparseVector
 from py_rust_stemmers import SnowballStemmer
 
 _STOPWORDS_PATH = Path(__file__).resolve().parent / "data" / "bm25" / "english.txt"
@@ -48,7 +49,13 @@ def _compute_token_id(token: str) -> int:
     return abs(mmh3.hash(token))
 
 
-class LocalBm25Sparse(SparseEmbeddings):
+@dataclass(frozen=True)
+class SparseVector:
+    indices: list[int]
+    values: list[float]
+
+
+class LocalBm25Sparse:
     """BM25 sparse vectors compatible with Qdrant IDF modifier — fully offline."""
 
     def __init__(

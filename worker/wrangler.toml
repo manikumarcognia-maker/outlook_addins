@@ -1,0 +1,18 @@
+name = "fr8labs-addin"
+main = "src/index.ts"
+compatibility_date = "2025-03-01"
+
+# UI: build first with `npm run build:frontend` from this folder.
+[assets]
+directory = "../frontend/dist"
+binding = "ASSETS"
+not_found_handling = "single-page-application"
+run_worker_first = true
+
+# Optional: forward /api/* and /health (when not handled in Worker) to Python FastAPI
+# until the email-agent API is ported to this Worker or Cloudflare Containers.
+# Set in Cloudflare dashboard → Settings → Variables, or `.dev.vars` locally.
+# PYTHON_BACKEND_URL = "https://your-python-api.example.com"
+
+[vars]
+SERVICE_NAME = "fr8labs-addin-worker"

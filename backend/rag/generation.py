@@ -160,8 +160,8 @@ def generate_draft_reply(email_subject: str, email_body: str) -> DraftReplyResul
         logger.info("SANITIZED_QUERY | chars=%s | preview=%r", len(query_text), query_text[:200])
 
     candidates = hybrid_search(query_text)
-    logger.info("HYBRID_SEARCH_RESULT | candidate_count=%s", len(candidates))
-    _log_retrieved_chunks(candidates[:5], "hybrid_search_top5")
+    logger.info("DENSE_SEARCH_RESULT | candidate_count=%s", len(candidates))
+    _log_retrieved_chunks(candidates[:5], "dense_search_top5")
 
     if not candidates:
         logger.warning("NO_CONTEXT_FOUND | returning fallback draft")

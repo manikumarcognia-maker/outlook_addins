@@ -1,6 +1,7 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import type { EmailContext } from "../types";
-import { generateDraftReply } from "../services/draftReplyService";
+import { generateThreadAgentDraft } from "../services/emailAgentService";
+import { fetchConversationMessages } from "../services/conversationMessages";
 import { insertDraftIntoReply } from "../hooks/useEmailItem";
 import { Badge, ErrorBanner, LoadingState } from "./shared/UiPrimitives";
 
@@ -14,27 +15,71 @@ interface DraftReplyPanelProps {
 export function DraftReplyPanel({ email, emailError }: DraftReplyPanelProps) {
   const [state, setState] = useState<DraftState>("idle");
   const [draft, setDraft] = useState("");
+  const [citations, setCitations] = useState<string[]>([]);
   const [error, setError] = useState<string | null>(null);
+  const inFlightRef = useRef(false);
 
   async function handleGenerate() {
-    if (!email) return;
+    if (!email || state === "loading" || inFlightRef.current) return;
+    inFlightRef.current = true;
     setState("loading");
     setError(null);
     try {
-      const result = await generateDraftReply({
-        subject: email.subject,
-        body: email.body,
-        senderEmail: email.senderEmail,
-        senderName: email.senderName,
+      let conversationMessages;
+      let graphWarning: string | null = null;
+      try {
+        conversationMessages = await fetchConversationMessages(email.threadId);
+      } catch (graphError) {
+        graphWarning =
+          graphError instanceof Error
+            ? graphError.message
+            : "Could not load full conversation from Microsoft Graph.";
+        conversationMessages = [
+          {
+            sourceMessageId: email.sourceMessageId,
+            body: email.body,
+          },
+        ];
+      }
+
+      const triggerInList = conversationMessages.some(
+        (m) => m.sourceMessageId === email.sourceMessageId
+      );
+      if (!triggerInList) {
+        conversationMessages = [
+          ...conversationMessages,
+          {
+            sourceMessageId: email.sourceMessageId,
+            body: email.body,
+          },
+        ];
+      }
+
+      const result = await generateThreadAgentDraft({
+        threadId: email.threadId,
+        emailBody: email.body,
+        sourceMessageId: email.sourceMessageId,
+        conversationMessages,
       });
+
+      if (graphWarning) {
+        setError(`Full thread sync unavailable: ${graphWarning} Only the open email was synced.`);
+      }
       if (!result.draft.trim()) {
         throw new Error("The AI returned an empty draft. Please try again.");
       }
       setDraft(result.draft);
+      setCitations(
+        result.citations.map(
+          (c) => `${c.originalFilename} (chunk ${c.chunkIndex})`
+        )
+      );
       setState("ready");
     } catch (err) {
       setError(err instanceof Error ? err.message : "Failed to generate draft.");
       setState("error");
+    } finally {
+      inFlightRef.current = false;
     }
   }
 
@@ -51,6 +96,7 @@ export function DraftReplyPanel({ email, emailError }: DraftReplyPanelProps) {
 
   function handleDiscard() {
     setDraft("");
+    setCitations([]);
     setState("idle");
     setError(null);
   }
@@ -105,6 +151,11 @@ export function DraftReplyPanel({ email, emailError }: DraftReplyPanelProps) {
           </div>
           <div className="card">
             <p className="card-title">Suggested reply</p>
+            {citations.length > 0 && (
+              <p className="hint" style={{ marginBottom: 8 }}>
+                Sources: {citations.join("; ")}
+              </p>
+            )}
             <div className="field">
               <label htmlFor="draft-text">Edit before inserting</label>
               <textarea

@@ -2,11 +2,11 @@ import logging
 import re
 
 from langchain_core.documents import Document
-from qdrant_client.http import models
 
 from app.observability import trace_step
 from rag.config import settings
-from rag.qdrant_store import get_vector_store
+from rag.embeddings import get_dense_embeddings
+from rag.pg_store import dense_search
 
 logger = logging.getLogger("fr8labs.retrieval")
 
@@ -39,31 +39,21 @@ def sanitize_email_content(subject: str, body: str) -> str:
     return combined
 
 
-def _active_filter() -> models.Filter:
-    return models.Filter(
-        must=[
-            models.FieldCondition(
-                key="metadata.active",
-                match=models.MatchValue(value=True),
-            )
-        ]
-    )
-
-
-def hybrid_search(query_text: str, top_k: int | None = None) -> list[Document]:
+def hybrid_search(
+    query_text: str,
+    top_k: int | None = None,
+    company_id: str | None = None,
+) -> list[Document]:
     k = top_k if top_k is not None else settings.RETRIEVAL_TOP_K
+    cid = company_id or settings.DEFAULT_COMPANY_ID
+    query_vector = get_dense_embeddings().embed_query(query_text)
     with trace_step(
-        "qdrant_hybrid_search",
+        "pgvector_dense_search",
         logger,
         top_k=k,
-        collection=settings.QDRANT_COLLECTION,
+        company_id=cid,
         query_chars=len(query_text),
     ):
-        vector_store = get_vector_store()
-        results = vector_store.similarity_search(
-            query_text,
-            k=k,
-            filter=_active_filter(),
-        )
-        logger.info("QDRANT_SEARCH_DONE | returned=%s", len(results))
+        results = dense_search(query_vector, k, company_id=company_id)
+        logger.info("PGVECTOR_SEARCH_DONE | returned=%s", len(results))
         return results
