@@ -1,4 +1,5 @@
-name = "fr8labs-addin"
+# Must match the Worker name in Cloudflare (e.g. outlook-addins.*.workers.dev).
+name = "outlook-addins"
 main = "src/index.ts"
 compatibility_date = "2025-03-01"
 

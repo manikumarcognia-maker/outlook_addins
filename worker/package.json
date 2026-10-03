@@ -5,7 +5,8 @@
   "type": "module",
   "scripts": {
     "dev": "wrangler dev",
-    "deploy": "npm run build:frontend && wrangler deploy",
+    "deploy": "npm run build:frontend && node scripts/verify-dist.mjs && wrangler deploy",
+    "verify:dist": "node scripts/verify-dist.mjs",
     "build:frontend": "npm run build --prefix ../frontend",
     "typecheck": "tsc --noEmit"
   },
