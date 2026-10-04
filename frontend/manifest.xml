@@ -7,17 +7,17 @@
   xsi:type="MailApp">
 
   <Id>ace6ee27-d0ce-4026-875f-027b020a1dac</Id>
-  <Version>1.0.0.0</Version>
+  <Version>1.0.0.1</Version>
   <ProviderName>Ziffity</ProviderName>
   <DefaultLocale>en-US</DefaultLocale>
   <DisplayName DefaultValue="Fr8Labs Assistant" />
   <Description DefaultValue="AI draft reply, create quote, and verify customer from Outlook." />
-  <IconUrl DefaultValue="https://localhost:3000/assets/icon-32.png" />
-  <HighResolutionIconUrl DefaultValue="https://localhost:3000/assets/icon-80.png" />
-  <SupportUrl DefaultValue="https://localhost:3000/support.html" />
+  <IconUrl DefaultValue="https://outlook-addins.manikumar-cognia.workers.dev/assets/icon-32.png" />
+  <HighResolutionIconUrl DefaultValue="https://outlook-addins.manikumar-cognia.workers.dev/assets/icon-80.png" />
+  <SupportUrl DefaultValue="https://outlook-addins.manikumar-cognia.workers.dev/support.html" />
 
   <AppDomains>
-    <AppDomain>https://localhost:3000</AppDomain>
+    <AppDomain>https://outlook-addins.manikumar-cognia.workers.dev</AppDomain>
   </AppDomains>
 
   <Hosts>
@@ -33,7 +33,7 @@
   <FormSettings>
     <Form xsi:type="ItemRead">
       <DesktopSettings>
-        <SourceLocation DefaultValue="https://localhost:3000/index.html" />
+        <SourceLocation DefaultValue="https://outlook-addins.manikumar-cognia.workers.dev/index.html" />
         <RequestedHeight>250</RequestedHeight>
       </DesktopSettings>
     </Form>
@@ -90,13 +90,13 @@
 
     <Resources>
       <bt:Images>
-        <bt:Image id="Icon.16x16" DefaultValue="https://localhost:3000/assets/icon-16.png" />
-        <bt:Image id="Icon.32x32" DefaultValue="https://localhost:3000/assets/icon-32.png" />
-        <bt:Image id="Icon.80x80" DefaultValue="https://localhost:3000/assets/icon-80.png" />
+        <bt:Image id="Icon.16x16" DefaultValue="https://outlook-addins.manikumar-cognia.workers.dev/assets/icon-16.png" />
+        <bt:Image id="Icon.32x32" DefaultValue="https://outlook-addins.manikumar-cognia.workers.dev/assets/icon-32.png" />
+        <bt:Image id="Icon.80x80" DefaultValue="https://outlook-addins.manikumar-cognia.workers.dev/assets/icon-80.png" />
       </bt:Images>
       <bt:Urls>
-        <bt:Url id="Commands.Url" DefaultValue="https://localhost:3000/commands.html" />
-        <bt:Url id="Taskpane.Url" DefaultValue="https://localhost:3000/index.html?view=draft" />
+        <bt:Url id="Commands.Url" DefaultValue="https://outlook-addins.manikumar-cognia.workers.dev/commands.html" />
+        <bt:Url id="Taskpane.Url" DefaultValue="https://outlook-addins.manikumar-cognia.workers.dev/index.html?view=draft" />
       </bt:Urls>
       <bt:ShortStrings>
         <bt:String id="GroupLabel" DefaultValue="Fr8Labs" />
@@ -148,10 +148,10 @@
         </Host>
       </Hosts>
 
-      <!-- Replace Id and Resource with your Entra app registration (see docs/local-outlook-testing.md). -->
+      <!-- Entra: replace placeholder GUID with Application (client) ID; match Expose an API URI. Client ID is public, not a secret. -->
       <WebApplicationInfo>
         <Id>00000000-0000-4000-8000-000000000000</Id>
-        <Resource>api://localhost:3000/00000000-0000-4000-8000-000000000000</Resource>
+        <Resource>api://outlook-addins.manikumar-cognia.workers.dev/00000000-0000-4000-8000-000000000000</Resource>
         <Scopes>
           <Scope>access_as_user</Scope>
         </Scopes>
@@ -159,13 +159,13 @@
 
       <Resources>
         <bt:Images>
-          <bt:Image id="Icon.16x16" DefaultValue="https://localhost:3000/assets/icon-16.png" />
-          <bt:Image id="Icon.32x32" DefaultValue="https://localhost:3000/assets/icon-32.png" />
-          <bt:Image id="Icon.80x80" DefaultValue="https://localhost:3000/assets/icon-80.png" />
+          <bt:Image id="Icon.16x16" DefaultValue="https://outlook-addins.manikumar-cognia.workers.dev/assets/icon-16.png" />
+          <bt:Image id="Icon.32x32" DefaultValue="https://outlook-addins.manikumar-cognia.workers.dev/assets/icon-32.png" />
+          <bt:Image id="Icon.80x80" DefaultValue="https://outlook-addins.manikumar-cognia.workers.dev/assets/icon-80.png" />
         </bt:Images>
         <bt:Urls>
-          <bt:Url id="Commands.Url" DefaultValue="https://localhost:3000/commands.html" />
-          <bt:Url id="Taskpane.Url" DefaultValue="https://localhost:3000/index.html?view=draft" />
+          <bt:Url id="Commands.Url" DefaultValue="https://outlook-addins.manikumar-cognia.workers.dev/commands.html" />
+          <bt:Url id="Taskpane.Url" DefaultValue="https://outlook-addins.manikumar-cognia.workers.dev/index.html?view=draft" />
         </bt:Urls>
         <bt:ShortStrings>
           <bt:String id="GroupLabel" DefaultValue="Fr8Labs" />

@@ -54,9 +54,14 @@ export default {
       return app.fetch(request, env, _ctx);
     }
     const assetResponse = await serveStatic(request, env);
-    assetResponse.headers.set("Access-Control-Allow-Origin", "*");
-    assetResponse.headers.set("Content-Security-Policy", "frame-ancestors *");
-    assetResponse.headers.delete("x-frame-options");
-    return assetResponse;
+    const headers = new Headers(assetResponse.headers);
+    headers.set("Access-Control-Allow-Origin", "*");
+    headers.set("Content-Security-Policy", "frame-ancestors *");
+    headers.delete("x-frame-options");
+    return new Response(assetResponse.body, {
+      status: assetResponse.status,
+      statusText: assetResponse.statusText,
+      headers,
+    });
   },
 };
