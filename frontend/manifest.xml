@@ -7,7 +7,7 @@
   xsi:type="MailApp">
 
   <Id>ace6ee27-d0ce-4026-875f-027b020a1dac</Id>
-  <Version>1.0.0.1</Version>
+  <Version>1.0.0.0</Version>
   <ProviderName>Ziffity</ProviderName>
   <DefaultLocale>en-US</DefaultLocale>
   <DisplayName DefaultValue="Fr8Labs Assistant" />
@@ -103,7 +103,7 @@
         <bt:String id="Open.Label" DefaultValue="Fr8Labs Assistant" />
       </bt:ShortStrings>
       <bt:LongStrings>
-        <bt:String id="Open.Tooltip" DefaultValue="Open Fr8Labs Assistant — draft reply, create quote, or verify customer." />
+        <bt:String id="Open.Tooltip" DefaultValue="Open Fr8Labs Assistant - draft reply, create quote, or verify customer." />
       </bt:LongStrings>
     </Resources>
 
@@ -148,15 +148,6 @@
         </Host>
       </Hosts>
 
-      <!-- Entra: replace placeholder GUID with Application (client) ID; match Expose an API URI. Client ID is public, not a secret. -->
-      <WebApplicationInfo>
-        <Id>00000000-0000-4000-8000-000000000000</Id>
-        <Resource>api://outlook-addins.manikumar-cognia.workers.dev/00000000-0000-4000-8000-000000000000</Resource>
-        <Scopes>
-          <Scope>access_as_user</Scope>
-        </Scopes>
-      </WebApplicationInfo>
-
       <Resources>
         <bt:Images>
           <bt:Image id="Icon.16x16" DefaultValue="https://outlook-addins.manikumar-cognia.workers.dev/assets/icon-16.png" />
@@ -172,9 +163,20 @@
           <bt:String id="Open.Label" DefaultValue="Fr8Labs Assistant" />
         </bt:ShortStrings>
         <bt:LongStrings>
-          <bt:String id="Open.Tooltip" DefaultValue="Open Fr8Labs Assistant — draft reply, create quote, or verify customer." />
+          <bt:String id="Open.Tooltip" DefaultValue="Open Fr8Labs Assistant - draft reply, create quote, or verify customer." />
         </bt:LongStrings>
       </Resources>
+
+      <!-- Entra: replace placeholder GUID with Application (client) ID; match Expose an API URI. -->
+      <WebApplicationInfo>
+        <Id>00000000-0000-4000-8000-000000000000</Id>
+        <Resource>api://outlook-addins.manikumar-cognia.workers.dev/00000000-0000-4000-8000-000000000000</Resource>
+        <Scopes>
+          <Scope>openid</Scope>
+          <Scope>profile</Scope>
+          <Scope>access_as_user</Scope>
+        </Scopes>
+      </WebApplicationInfo>
     </VersionOverrides>
   </VersionOverrides>
 </OfficeApp>
