@@ -7,7 +7,7 @@
   xsi:type="MailApp">
 
   <Id>ace6ee27-d0ce-4026-875f-027b020a1dac</Id>
-  <Version>1.0.0.0</Version>
+  <Version>1.0.0.1</Version>
   <ProviderName>Ziffity</ProviderName>
   <DefaultLocale>en-US</DefaultLocale>
   <DisplayName DefaultValue="Fr8Labs Assistant" />
@@ -167,10 +167,10 @@
         </bt:LongStrings>
       </Resources>
 
-      <!-- Entra: replace placeholder GUID with Application (client) ID; match Expose an API URI. -->
+      <!-- Entra app Outlook-assistant: client ID only (never put client secrets in the manifest). -->
       <WebApplicationInfo>
-        <Id>00000000-0000-4000-8000-000000000000</Id>
-        <Resource>api://outlook-addins.manikumar-cognia.workers.dev/00000000-0000-4000-8000-000000000000</Resource>
+        <Id>0d27c3be-594a-4c12-96d4-f17b1b704b7e</Id>
+        <Resource>api://outlook-addins.manikumar-cognia.workers.dev/0d27c3be-594a-4c12-96d4-f17b1b704b7e</Resource>
         <Scopes>
           <Scope>openid</Scope>
           <Scope>profile</Scope>
